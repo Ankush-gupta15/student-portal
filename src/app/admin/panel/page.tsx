@@ -2,6 +2,8 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
+import { sendEmail } from "@/services/email"; // Import sendEmail function
+import { useToast } from "@/hooks/use-toast"; // Import useToast hook
 
 // Define the Student type
 type Student = {
@@ -23,6 +25,7 @@ type StudentListProps = {
 
 export default function AdminPanelPage() {
   const [students, setStudents] = useState<Student[]>([]);
+  const { toast } = useToast(); // Use the useToast hook
 
   useEffect(() => {
     // Fetch student data from local storage
@@ -37,13 +40,45 @@ export default function AdminPanelPage() {
   const approvedList = students.filter((student) => student.status === "approved");
   const rejectedList = students.filter((student) => student.status === "rejected");
 
-  const handleApprove = (id: string) => {
+  const handleApprove = async (id: string) => {
+    // Find the student to be approved
+    const studentToApprove = students.find((student) => student.id === id);
+
+    if (!studentToApprove) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Student not found."
+      });
+      return;
+    }
+
     // Implement approval logic and send confirmation email
     const updatedStudents = students.map((student) =>
       student.id === id ? { ...student, status: "approved" } : student
     );
     setStudents(updatedStudents);
     localStorage.setItem("students", JSON.stringify(updatedStudents)); // Update local storage
+
+    // Send confirmation email
+    try {
+      await sendEmail({
+        to: studentToApprove.email,
+        subject: "CampusConnect - Registration Approved",
+        html: `<p>Dear ${studentToApprove.name},</p><p>Your registration for CampusConnect has been approved!</p>`,
+      });
+      toast({
+        title: "Success",
+        description: `Confirmation email sent to ${studentToApprove.email}.`,
+      });
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: `Failed to send confirmation email to ${studentToApprove.email}.`,
+      });
+    }
   };
 
   const handleReject = (id: string) => {
@@ -53,6 +88,10 @@ export default function AdminPanelPage() {
     );
     setStudents(updatedStudents);
     localStorage.setItem("students", JSON.stringify(updatedStudents)); // Update local storage
+    toast({
+      title: "Student Rejected",
+      description: "The student has been rejected.",
+    });
   };
 
   return (

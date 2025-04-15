@@ -3,8 +3,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 
+// Define the Student type
+type Student = {
+  id: string;
+  name: string;
+  rollNumber: string;
+  branch: string;
+  email: string;
+  status: "pending" | "approved" | "rejected";
+};
+
 // Mock data for student details
-const mockStudents = [
+const mockStudents: Student[] = [
   {
     id: "1",
     name: "John Doe",
@@ -39,8 +49,15 @@ const mockStudents = [
   },
 ];
 
+// Define the StudentListProps type
+type StudentListProps = {
+  students: Student[];
+  onApprove?: (id: string) => void;
+  onReject?: (id: string) => void;
+};
+
 export default function AdminPanelPage() {
-  const [students, setStudents] = useState(mockStudents);
+  const [students, setStudents] = useState<Student[]>(mockStudents);
 
   // Separate lists based on status
   const pendingList = students.filter((student) => student.status === "pending");
@@ -106,7 +123,7 @@ export default function AdminPanelPage() {
 }
 
 // StudentList Component
-function StudentList({ students, onApprove, onReject }: any) {
+function StudentList({ students, onApprove, onReject }: StudentListProps) {
   return (
     <ul>
       {students.map((student) => (

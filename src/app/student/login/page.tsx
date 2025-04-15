@@ -6,6 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Define the Student type
+type Student = {
+  id: string;
+  name: string;
+  rollNumber: string;
+  branch: string;
+  email: string;
+  password: string; // Consider hashing this in a real application
+  status: "pending" | "approved" | "rejected";
+};
+
 export default function StudentLoginPage() {
   const [name, setName] = useState("");
   const [rollNumber, setRollNumber] = useState("");
@@ -17,11 +28,26 @@ export default function StudentLoginPage() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // TODO: Implement secure authentication and data storage in a database
+    // Create a new student object
+    const newStudent: Student = {
+      id: Math.random().toString(36).substring(2, 15), // Generate a random ID
+      name,
+      rollNumber,
+      branch,
+      email,
+      password, // In real app, hash this before storing
+      status: "pending",
+    };
 
-    // For demonstration purposes, let's just redirect to a student profile page
-    router.push("/admin/panel");
+    // Store the new student in mockStudents (you would typically store this in a database)
+    mockStudents.push(newStudent);
+
+    // Redirect to the home page after registration
+    router.push("/");
   };
+
+  // Mock database to store students. In a real app, you would use a database
+  const mockStudents: Student[] = [];
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-background">
@@ -77,7 +103,7 @@ export default function StudentLoginPage() {
               />
             </div>
             <Button type="submit" className="w-full mt-4">
-              Register/Login
+              Register
             </Button>
           </form>
         </CardContent>
@@ -85,4 +111,3 @@ export default function StudentLoginPage() {
     </div>
   );
 }
-

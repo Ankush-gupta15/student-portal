@@ -20,7 +20,7 @@ export default function StudentLoginPage() {
     // TODO: Implement secure authentication and data storage in a database
 
     // For demonstration purposes, let's just redirect to a student profile page
-    router.push("/student/profile");
+    router.push("/admin/panel");
   };
 
   return (
@@ -85,3 +85,4 @@ export default function StudentLoginPage() {
     </div>
   );
 }
+

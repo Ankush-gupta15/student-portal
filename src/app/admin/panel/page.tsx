@@ -10,44 +10,9 @@ type Student = {
   rollNumber: string;
   branch: string;
   email: string;
+  password?: string;
   status: "pending" | "approved" | "rejected";
 };
-
-// Mock data for student details
-const mockStudents: Student[] = [
-  {
-    id: "1",
-    name: "John Doe",
-    rollNumber: "2023001",
-    branch: "Computer Science",
-    email: "john.doe@example.com",
-    status: "pending",
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    rollNumber: "2023002",
-    branch: "Electrical Engineering",
-    email: "jane.smith@example.com",
-    status: "approved",
-  },
-  {
-    id: "3",
-    name: "Alice Johnson",
-    rollNumber: "2023003",
-    branch: "Mechanical Engineering",
-    email: "alice.johnson@example.com",
-    status: "rejected",
-  },
-  {
-    id: "4",
-    name: "Bob Williams",
-    rollNumber: "2023004",
-    branch: "Civil Engineering",
-    email: "bob.williams@example.com",
-    status: "pending",
-  },
-];
 
 // Define the StudentListProps type
 type StudentListProps = {
@@ -57,33 +22,37 @@ type StudentListProps = {
 };
 
 export default function AdminPanelPage() {
-  const [students, setStudents] = useState<Student[]>(mockStudents);
+  const [students, setStudents] = useState<Student[]>([]);
+
+  useEffect(() => {
+    // Fetch student data from local storage
+    const storedStudents = localStorage.getItem("students");
+    if (storedStudents) {
+      setStudents(JSON.parse(storedStudents));
+    }
+  }, []);
 
   // Separate lists based on status
   const pendingList = students.filter((student) => student.status === "pending");
   const approvedList = students.filter((student) => student.status === "approved");
   const rejectedList = students.filter((student) => student.status === "rejected");
 
-  useEffect(() => {
-    // TODO: Fetch student data from database and setStudents
-  }, []);
-
   const handleApprove = (id: string) => {
-    // TODO: Implement approval logic and send confirmation email
-    setStudents((prevStudents) =>
-      prevStudents.map((student) =>
-        student.id === id ? { ...student, status: "approved" } : student
-      )
+    // Implement approval logic and send confirmation email
+    const updatedStudents = students.map((student) =>
+      student.id === id ? { ...student, status: "approved" } : student
     );
+    setStudents(updatedStudents);
+    localStorage.setItem("students", JSON.stringify(updatedStudents)); // Update local storage
   };
 
   const handleReject = (id: string) => {
-    // TODO: Implement rejection logic
-    setStudents((prevStudents) =>
-      prevStudents.map((student) =>
-        student.id === id ? { ...student, status: "rejected" } : student
-      )
+    // Implement rejection logic
+    const updatedStudents = students.map((student) =>
+      student.id === id ? { ...student, status: "rejected" } : student
     );
+    setStudents(updatedStudents);
+    localStorage.setItem("students", JSON.stringify(updatedStudents)); // Update local storage
   };
 
   return (

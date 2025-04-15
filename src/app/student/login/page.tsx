@@ -39,15 +39,27 @@ export default function StudentLoginPage() {
       status: "pending",
     };
 
-    // Store the new student in mockStudents (you would typically store this in a database)
-    mockStudents.push(newStudent);
+    // Get existing students from local storage or initialize an empty array
+    const storedStudents = localStorage.getItem("students");
+    let students: Student[] = [];
+    if (storedStudents) {
+      try {
+        students = JSON.parse(storedStudents);
+      } catch (error) {
+        console.error("Error parsing students from local storage:", error);
+        students = []; // Initialize to an empty array if parsing fails
+      }
+    }
+
+    // Add the new student to the array
+    students.push(newStudent);
+
+    // Store the updated students array in local storage
+    localStorage.setItem("students", JSON.stringify(students));
 
     // Redirect to the home page after registration
     router.push("/");
   };
-
-  // Mock database to store students. In a real app, you would use a database
-  const mockStudents: Student[] = [];
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-background">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -162,3 +163,4 @@ function StudentList({ students, onApprove, onReject }: StudentListProps) {
     </ul>
   );
 }
+

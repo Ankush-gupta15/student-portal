@@ -23,13 +23,13 @@ export interface Email {
  * @param email The email to send.
  * @returns A promise that resolves when the email is sent successfully.
  */
-export async function sendEmail(to: string, subject: string, text: string) {
+export async function sendEmail(email: Email) {
   const response = await fetch('/api/send-email', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ to, subject, text }),
+    body: JSON.stringify(email),
   });
 
   const responseText = await response.text();
@@ -52,3 +52,4 @@ export async function sendEmail(to: string, subject: string, text: string) {
 
   return true;
 }
+

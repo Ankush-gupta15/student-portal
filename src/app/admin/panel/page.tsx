@@ -43,7 +43,7 @@ export default function AdminPanelPage() {
   const handleApprove = async (id: string) => {
     // Find the student to be approved
     const studentToApprove = students.find((student) => student.id === id);
-
+    
     if (!studentToApprove) {
       toast({
         variant: "destructive",
@@ -64,7 +64,7 @@ export default function AdminPanelPage() {
     try {
       await sendEmail({
         to: studentToApprove.email,
-        subject: "CampusConnect - Registration Approved",
+        subject: "CampusConnect - Registration Approved", 
         html: `<p>Dear ${studentToApprove.name},</p><p>Your registration for CampusConnect has been approved!</p>`,
       });
       toast({

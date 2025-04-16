@@ -23,23 +23,32 @@ export interface Email {
  * @param email The email to send.
  * @returns A promise that resolves when the email is sent successfully.
  */
-export async function sendEmail(email: Email): Promise<void> {
-  const response = await fetch("/api/send-email", {
-    method: "POST",
+export async function sendEmail(to: string, subject: string, text: string) {
+  const response = await fetch('/api/send-email', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(email),
+    body: JSON.stringify({ to, subject, text }),
   });
+
+  const responseText = await response.text();
+  let errorData;
+
+  try {
+    errorData = JSON.parse(responseText);
+  } catch {
+    // fallback if response is not JSON
+    errorData = { error: responseText };
+  }
+
   if (!response.ok) {
-    const errorData = await response.json();
-    if (errorData && errorData.error) {
-      throw new Error(`Email sending failed: ${errorData.error}`);
+    if (errorData.error) {
+      throw new Error(`Email sending File: ${errorData.error}`);
     } else {
-      throw new Error(`Email sending failed with status: ${response.status}`);
+      throw new Error(`Email sending File with status: ${response.status}`);
     }
   }
-  //if success do nothing
-  // You can add more logic here if the API returns a message or id.
-  
+
+  return true;
 }

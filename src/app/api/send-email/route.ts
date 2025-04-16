@@ -3,23 +3,24 @@ import nodemailer from 'nodemailer';
 
 export async function POST(request: Request) {
   try {
-    const { to, subject, text } = await request.json();
+    const { to, subject, html } = await request.json();
 
     // Replace with your actual email credentials
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'your_email@gmail.com', 
-        pass: 'your_email_password',
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
     const mailOptions = {
-      from: 'your_email@gmail.com', // Use the same email as the auth user
+      from: process.env.EMAIL_USER,
       to,
-      subject,
-      text,
+      subject: subject || "Registration Approved",
+      html: html || "Congratulations! Your student registration has been approved by the admin.",
     };
+    
 
     await transporter.sendMail(mailOptions);
 

@@ -30,7 +30,7 @@ export default function StudentLoginPage() {
 
     // Create a new student object
     const newStudent: Student = {
-      id: Math.random().toString(36).substring(2, 15), // Generate a random ID
+      id: Date.now().toString(), // Generate a unique ID using timestamp
       name,
       rollNumber,
       branch,

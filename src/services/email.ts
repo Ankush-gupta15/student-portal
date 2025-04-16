@@ -43,11 +43,14 @@ export async function sendEmail(email: Email) {
   }
 
   if (!response.ok) {
+    let errorMessage = 'Email sending failed.';
     if (errorData.error) {
-      throw new Error(`Email sending File: ${errorData.error}`);
-    } else {
-      throw new Error(`Email sending File with status: ${response.status}`);
+      errorMessage += ` ${errorData.error}`;
     }
+    if (errorData.details) {
+      errorMessage += ` Details: ${errorData.details}`;
+    }
+    throw new Error(`Email sending File: ${errorMessage}`);
   }
 
   return true;

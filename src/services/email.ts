@@ -1,3 +1,4 @@
+
 /**
  * Represents the structure of an email message.
  */
@@ -23,6 +24,22 @@ export interface Email {
  * @returns A promise that resolves when the email is sent successfully.
  */
 export async function sendEmail(email: Email): Promise<void> {
-  // TODO: Implement this by calling an email sending API.
-  console.log(`Sending email to ${email.to} with subject ${email.subject}`);
+  const response = await fetch("/api/send-email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(email),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    if (errorData && errorData.error) {
+      throw new Error(`Email sending failed: ${errorData.error}`);
+    } else {
+      throw new Error(`Email sending failed with status: ${response.status}`);
+    }
+  }
+  //if success do nothing
+  // You can add more logic here if the API returns a message or id.
+  
 }

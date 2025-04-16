@@ -50,10 +50,8 @@ export async function sendEmail(email: Email) {
     if (errorData.details) {
       errorMessage += ` Details: ${errorData.details}`;
     }
-    throw new Error(`Email sending File: ${errorMessage}`);
+    throw new Error(`${errorMessage}`);
   }
 
   return true;
 }
-
-    

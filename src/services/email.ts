@@ -1,4 +1,3 @@
-
 /**
  * Represents the structure of an email message.
  */
@@ -50,8 +49,15 @@ export async function sendEmail(email: Email) {
     if (errorData.details) {
       errorMessage += ` Details: ${errorData.details}`;
     }
-    throw new Error(`${errorMessage}`);
+    // Add specific instructions for Gmail users
+    if (errorMessage.includes('Username and Password not accepted')) {
+      errorMessage += `. Please ensure that "Less secure app access" is enabled in your Gmail settings or use an App Password if you have 2-Step Verification enabled.`;
+      errorMessage += `\n\nFor Less secure app access, visit: https://myaccount.google.com/lesssecureapps`;
+      errorMessage += `\nFor App Passwords, visit: https://myaccount.google.com/apppasswords`;
+    }
+    throw new Error(`Email sending failed: ${errorMessage}`);
   }
 
   return true;
 }
+
